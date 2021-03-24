@@ -1,0 +1,17 @@
+#board-container {
+    height: 300px;
+    width: 300px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;
+}
+
+.board-element {
+    box-shadow: 0 0 0 1px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4em;
+    font-family: 'Flamenco', cursive;
+}
