@@ -75,7 +75,7 @@
     background-color: rgb(255, 204, 127);
 }
 
-#line {
+#diagonal, #horizontal, #vertical {
     position: absolute;
     z-index: 5;
     right: 0;
