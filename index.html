@@ -4,10 +4,22 @@
     <head>
         <link rel="stylesheet" href="style.css">
         <link href="https://fonts.googleapis.com/css2?family=Flamenco&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     </head>
     <body>
+        <div id="game-wrapper">
+            <div id="game-header">
+                <div class="player"><p class="player-name">Player 1</p><p class="marker">X</p></div>
+                <p id="versus">VS.</p>
+                <div class="player"><p class="player-name">Player 2</p><p class="marker">O</p></div>
+            </div>
+            <div id="game-board">
+                <div id="board-container"></div>
+                <img src="line.svg" id="line">
+            </div>
+        </div>
 
-        <div id="board-container"></div>
+        <div id="overlay"></div>
 
         <script src="script.js"></script>
 

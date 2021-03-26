@@ -1,17 +1,109 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+#game-wrapper {
+    width: 60vw;
+    margin: 4em auto;
+}
+
+#game-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 2em 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.player {
+    border: 1px solid grey;
+    border-radius: 10px;
+    width: 200px;
+    padding: .5em 1em;
+    display: flex;
+    justify-content: space-between;
+    transition: all .3s;
+    color: grey;
+}
+
+/*.player:hover {
+    box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+    color: black;
+}*/
+
+.player p {
+    margin: 0;
+}
+
+.player-name {
+    font-family: 'Roboto', sans-serif;
+}
+
+.marker {
+    font-family: 'Flamenco', cursive;
+    font-size: 1.1em;
+    font-weight: 900;
+}
+
+#versus {
+    font-size: 1.3em;
+    font-weight: 900;
+}
+
+#game-board {
+    margin: 0 auto;
+    /*padding: 1em 0;*/
+    position: relative;
+}
+
 #board-container {
     height: 300px;
     width: 300px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 1px;
+    position: absolute;
+    z-index: 1;
+    margin: 0 auto;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgb(255, 204, 127);
+}
+
+#line {
+    position: absolute;
+    z-index: 5;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
 }
 
 .board-element {
-    box-shadow: 0 0 0 1px black;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4em;
+    font-size: .1em;
     font-family: 'Flamenco', cursive;
+    border-color: black;
+    color: rgba(0, 0, 0, 0);
+    transition: all .4s;
+}
+
+.board-element[data-index="1"],
+.board-element[data-index="7"] {
+    border-style: none solid;
+}
+
+.board-element[data-index="3"],
+.board-element[data-index="5"] {
+    border-style: solid none;
+}
+
+.board-element[data-index="4"] {
+    border-style: solid;
 }
