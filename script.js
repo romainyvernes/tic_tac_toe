@@ -8,6 +8,42 @@ const Player = (marker) => {
     return {turn, play}
 };
 
+const homeDisplay = (() => {
+
+    const render = () => {
+        const players = document.querySelectorAll('input[type="text"]');
+        players.forEach(player => player.addEventListener('click', togglePlayer));
+    };
+
+    const togglePlayer = (event) => {
+        const selectedPlayer = event.target;
+        const otherPlayer = selectedPlayer.previousElementSibling ||
+                selectedPlayer.nextElementSibling;
+
+        const transform = 'none';
+        const background = 'grey';
+        const color = 'white';
+
+        const newTransform = 'scale(1.2)';
+        const newBackground = 'lightgrey';
+        const newColor = 'black';
+
+        selectedPlayer.style.transform = newTransform;
+        selectedPlayer.style.backgroundColor = newBackground;
+        selectedPlayer.style.color = newColor;
+
+        otherPlayer.style.transform = transform;
+        otherPlayer.style.backgroundColor = background;
+        otherPlayer.style.color = color;
+
+        if (otherPlayer.value === '') {
+            otherPlayer.value = `Player ${otherPlayer.dataset.index}`;
+        }
+    };
+
+    return {render}
+})();
+
 const playerDisplay = (() => {
     const toggle = () => {
         const players = document.querySelectorAll('.player');
@@ -15,27 +51,33 @@ const playerDisplay = (() => {
         const boxShadow = 'none';
         const transform = 'none';
         const color = 'grey';
+        const background = 'white';
         
         const newBoxShadow = '2px 2px 1px 1px rgba(0, 0, 0, 0.5)';
         const newTransform = 'scale(1.1)';
         const newColor = 'black';
+        const newBackground = 'rgb(255, 204, 127)';
 
         if (game.player1.turn) {
             players[0].style.boxShadow = newBoxShadow;
             players[0].style.transform = newTransform;
             players[0].style.color = newColor;
+            players[0].style.backgroundColor = newBackground;
 
             players[1].style.boxShadow = boxShadow;
             players[1].style.transform = transform;
             players[1].style.color = color;
+            players[1].style.backgroundColor = background;
         } else {
             players[1].style.boxShadow = newBoxShadow;
             players[1].style.transform = newTransform;
             players[1].style.color = newColor;
+            players[1].style.backgroundColor = newBackground;
 
             players[0].style.boxShadow = boxShadow;
             players[0].style.transform = transform;
             players[0].style.color = color;
+            players[0].style.backgroundColor = background;
         }
     };
 
@@ -74,8 +116,49 @@ const gameBoard = (() => {
             }
         });
     }
+
+    const displayLine = (box, orientation) => {
+        const horizontalLine = document.querySelector('#horizontal');
+        const verticalLine = document.querySelector('#vertical');
+        const diagonalLine = document.querySelector('#diagonal');
+
+        switch (box) {
+            case 0:
+                horizontalLine.style.transform = 'translateY(-29%)';
+                verticalLine.style.transform = 'translateX(-29%)';
+                break;
+            case 2:
+                verticalLine.style.transform = 'translateX(29%)';
+                diagonalLine.style.transform = 'scaleX(-1)';
+                break;
+            case 6:
+                horizontalLine.style.transform = 'translateY(29%)';
+                break;
+        }
+        
+        switch (orientation) {
+            case 'horizontal':
+                horizontalLine.style.display = 'block';
+                setTimeout(() => {
+                    horizontalLine.style.opacity = '1';
+                }, 300);
+                break;
+            case 'vertical':
+                verticalLine.style.display = 'block';
+                setTimeout(() => {
+                    verticalLine.style.opacity = '1';
+                }, 300);
+                break;
+            case 'diagonal':
+                diagonalLine.style.display = 'block';
+                setTimeout(() => {
+                    diagonalLine.style.opacity = '1';
+                }, 300);
+                break;
+        }
+    };
     
-    return {values, render, update}
+    return {values, render, update, displayLine}
 })();
 
 const game = (() => {
@@ -114,7 +197,9 @@ const game = (() => {
 
         let result = {
             status: false,
-            name: null
+            name: null,
+            box: null,
+            orientation: null
         };
         
         for (let i = 0; i < winningCombinations.length; i++) {
@@ -139,6 +224,16 @@ const game = (() => {
             if (winner.length === 3) {
                 result.status = true;
                 result.name = winner[0];
+                result.box = winningCombinations[i][0];
+                
+                if (i >= 0 && i <= 2) {
+                    result.orientation = 'horizontal';
+                } else if (i >= 3 && i <= 5) {
+                    result.orientation = 'vertical';
+                } else {
+                    result.orientation = 'diagonal';
+                }
+
                 return result;
             }
         }
@@ -173,16 +268,22 @@ const game = (() => {
         gameBoard.values.splice(boxIndex, 1, marker);
         gameBoard.update();
 
-        if (checkWinner().status || checkTie()) {
-            end();
-        }
+        const winnerCheck = checkWinner();
 
-        playerDisplay.toggle();
+        if (winnerCheck.status) {
+            end();
+            gameBoard.displayLine(winnerCheck.box, winnerCheck.orientation);
+        } else if (checkTie()) {
+            end();
+        } else {
+            playerDisplay.toggle();
+        }
     };
 
     return {player1, player2, start, play}
 })();
 
+homeDisplay.render();
 gameBoard.render();
 game.start = true;
 game.player1.turn = true;

@@ -21,7 +21,31 @@
             </div>
         </div>
 
-        <div id="overlay"></div>
+        <div id="overlay">
+            <h1>Tic Tac Toe</h1>
+            <div id="rules">
+                <h2>Rules</h2>
+                <p>Align three identical symbols to win.</p>
+            </div>
+            <h2>Player selection</h2>
+            <form id="player-selection">
+                <div id="players">
+                    <input type="text" id="player1-name" value="Player 1" maxlength="20" data-index="1">
+                    <input type="text" id="player2-name" value="Player 2" maxlength="20" data-index="2">
+                </div>
+                <div id="symbols">
+                    <label>
+                        <input type=radio name="symbol" checked>
+                        <span>X</span>
+                    </label>
+                    <label>
+                        <input type=radio name="symbol">
+                        <span>O</span>
+                    </label>
+                </div>
+                <button type="button" id="start">Play</button>
+            </form>
+        </div>
 
         <script src="script.js"></script>
 

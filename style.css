@@ -1,12 +1,155 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+#overlay {
+    position: absolute;
+    z-index: 10;
+    background-color: rgba(98, 68, 146, 0.9);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    color: white;
+    text-align: center;
+}
+
+h2 {
+    text-align: left;
+    margin-left: 20vw;
+}
+
+#overlay p {
+    margin-left: 22vw;
+    text-align: left;
+}
+
+#player-selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+input[type="text"] {
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding: 1em;
+    transition: transform .3s;
+    background-color: grey;
+    color: white;
+}
+
+#player1-name {
+    transform: scale(1.2);
+    background-color: lightgrey;
+    color: black;
+}
+
+#player1-name {
+    margin-right: 4em;
+}
+
+#players {
+    display: flex;
+    justify-content: center;
+    width: 200px;
+    margin: 1.5em auto;
+}
+
+#symbols {
+    display: flex;
+    justify-content: space-between;
+    width: 270px;
+    margin: 2.5em auto;
+}
+
+#player-selection label {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+input[type="radio"] {
+    appearance: none;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    background-color: grey;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: 0;
+    transition: transform .3s;
+}
+
+input[type="radio"]:focus {
+    outline: none;
+}
+input[type="radio"]:checked {
+    background-color: lightgrey;
+    transform: scale(1.2);
+}
+
+#player-selection span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: 1em 0;
+    transition: transform .3s;
+    font-size: 1.1em;
+    font-family: 'Flamenco', cursive;
+    font-weight: 900;
+}
+
+input[type="radio"]:checked + span {
+    transform: scale(1.3);
+    color: black;
+}
+
+#start {
+    height: 60px;
+    width: 80px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding: 1em;
+    background-color: grey;
+    color: white;
+    font-size: 1.1em;
+    margin-top: 2em;
+    align-self: center;
+}
+
+#start:hover {
+    background-color: lightgrey;
+    color: black;
 }
 
 #game-wrapper {
     width: 60vw;
-    margin: 4em auto;
+    margin: 1em auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 #game-header {
@@ -28,18 +171,13 @@
     color: grey;
 }
 
-/*.player:hover {
-    box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.5);
-    transform: scale(1.1);
-    color: black;
-}*/
-
 .player p {
     margin: 0;
 }
 
 .player-name {
     font-family: 'Roboto', sans-serif;
+    min-width: fit-content;
 }
 
 .marker {
@@ -51,28 +189,31 @@
 #versus {
     font-size: 1.3em;
     font-weight: 900;
+    min-width: 100px;
+    text-align: center;
 }
 
 #game-board {
     margin: 0 auto;
-    /*padding: 1em 0;*/
     position: relative;
+    width: 350px;
+    height: 350px;
+    background-color: rgb(255, 204, 127);
 }
 
 #board-container {
-    height: 300px;
-    width: 300px;
+    height: 86%;
+    width: 86%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     position: absolute;
     z-index: 1;
-    margin: 0 auto;
+    margin: auto;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
-    background-color: rgb(255, 204, 127);
 }
 
 #diagonal, #horizontal, #vertical {
@@ -81,6 +222,11 @@
     right: 0;
     left: 0;
     margin: 0 auto;
+    opacity: 0;
+    display: none;
+    transition: all .5s;
+    top: 0;
+    bottom: 0;
 }
 
 .board-element {
