@@ -234,7 +234,7 @@ button:active {
     bottom: 0;
 }
 
-#diagonal, #horizontal, #vertical {
+.line {
     position: absolute;
     z-index: 5;
     right: 0;

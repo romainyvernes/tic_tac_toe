@@ -40,10 +40,6 @@ const homeDisplay = (() => {
         otherPlayer.style.transform = transform;
         otherPlayer.style.backgroundColor = background;
         otherPlayer.style.color = color;
-
-        if (otherPlayer.value === '') {
-            otherPlayer.value = `Player ${otherPlayer.dataset.index}`;
-        }
     };
 
     const show = () => {
@@ -189,8 +185,12 @@ const gameBoard = (() => {
     };
 
     const hideLine = () => {
-        const lines = document.querySelectorAll('#game-board img');
-        lines.forEach(line => line.style.display = 'none');
+        const lines = document.querySelectorAll('.line');
+        lines.forEach(line => {
+            line.style.display = 'none';
+            line.style.transform = 'none';
+            line.style.opacity = '0';
+        });
     };
     
     return {values, render, update, displayLine, hideLine}
