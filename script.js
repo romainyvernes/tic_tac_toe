@@ -1,18 +1,21 @@
-const Player = (marker) => {
+const Player = (playerName, playerMarker) => {
     let turn = false;
-
-    const play = () => {
-        return marker;
-    };
-
-    return {turn, play}
+    let name = playerName;
+    let marker = playerMarker;
+    
+    return {turn, marker, name}
 };
 
 const homeDisplay = (() => {
 
+    const overlay = document.querySelector('#overlay');
+
     const render = () => {
         const players = document.querySelectorAll('input[type="text"]');
         players.forEach(player => player.addEventListener('click', togglePlayer));
+
+        const playerSelection = document.querySelector('#player-selection');
+        playerSelection.addEventListener('submit', game.start);
     };
 
     const togglePlayer = (event) => {
@@ -28,10 +31,12 @@ const homeDisplay = (() => {
         const newBackground = 'lightgrey';
         const newColor = 'black';
 
+        selectedPlayer.dataset.checked = 'true';
         selectedPlayer.style.transform = newTransform;
         selectedPlayer.style.backgroundColor = newBackground;
         selectedPlayer.style.color = newColor;
 
+        otherPlayer.dataset.checked = 'false';
         otherPlayer.style.transform = transform;
         otherPlayer.style.backgroundColor = background;
         otherPlayer.style.color = color;
@@ -41,7 +46,15 @@ const homeDisplay = (() => {
         }
     };
 
-    return {render}
+    const show = () => {
+        overlay.style.display = 'block';
+    };
+
+    const hide = () => {
+        overlay.style.display = 'none';
+    };
+
+    return {render, show, hide}
 })();
 
 const playerDisplay = (() => {
@@ -81,7 +94,24 @@ const playerDisplay = (() => {
         }
     };
 
-    return {toggle}
+    const update = () => {
+        const playerNames = document.querySelectorAll('.player-name');
+        const markers = document.querySelectorAll('.marker');
+
+        for (let i = 0; i < 2; i++) {
+            if (i == 0) {
+                playerNames[i].textContent = game.player1.name;
+                markers[i].textContent = game.player1.marker;
+            } else {
+                playerNames[i].textContent = game.player2.name;
+                markers[i].textContent = game.player2.marker;
+            }
+        }
+
+        game.player1
+    };
+
+    return {toggle, update}
 })();
 
 const gameBoard = (() => {
@@ -97,7 +127,7 @@ const gameBoard = (() => {
             boardElement.addEventListener('click', game.play);
             board.appendChild(boardElement);
 
-            values.push(null);
+            gameBoard.values.push(null);
         }
     }
 
@@ -107,8 +137,8 @@ const gameBoard = (() => {
             const newColor = 'rgba(0,0,0,1)';
             const newSize = '4em';
             
-            if (values[index]) {
-                box.textContent = values[index];
+            if (gameBoard.values[index]) {
+                box.textContent = gameBoard.values[index];
                 box.style.color = newColor;
                 box.style.fontSize = newSize;
             } else {
@@ -157,20 +187,73 @@ const gameBoard = (() => {
                 break;
         }
     };
+
+    const hideLine = () => {
+        const lines = document.querySelectorAll('#game-board img');
+        lines.forEach(line => line.style.display = 'none');
+    };
     
-    return {values, render, update, displayLine}
+    return {values, render, update, displayLine, hideLine}
 })();
 
 const game = (() => {
-    let _markers = ["X", "O"];
+    let run = false;
 
-    const player1 = Player(_markers.shift());
-    const player2 = Player(_markers.shift());
+    let player1;
+    let player2;
 
-    let start = false;
+    const start = (event) => {
+        // prevent page refresh
+        event.preventDefault();
+
+        const player1Name = event.target[0].value || 'Player 1';
+        const player2Name = event.target[1].value || 'Player 2';
+
+        let selectedMarker;
+        let otherMarker;
+
+        if (event.target[2].checked) {
+            selectedMarker = event.target[2].nextElementSibling.textContent;
+            otherMarker = event.target[3].nextElementSibling.textContent;
+        } else {
+            selectedMarker = event.target[3].nextElementSibling.textContent;
+            otherMarker = event.target[2].nextElementSibling.textContent;
+        }
+
+        // determine which of the 2 player inputs was selected, and create 
+        // player objects
+        if (event.target[0].dataset.checked === 'true') {
+            game.player1 = Player(player1Name, selectedMarker);
+            game.player2 = Player(player2Name, otherMarker);
+        } else {
+            game.player1 = Player(player1Name, otherMarker);
+            game.player2 = Player(player2Name, selectedMarker);
+        }
+
+        playerDisplay.update();
+        homeDisplay.hide();
+        game.player1.turn = true;
+        
+        // clear board if filled
+        restart();
+    }
+
+    const restart = () => {
+        gameBoard.values = [];
+        
+        const boardElements = document.querySelectorAll('.board-element');
+        boardElements.forEach(element => element.remove());
+
+        gameBoard.hideLine();
+        gameBoard.render();
+        controlsDisplay.hideRestart();
+        game.run = true;
+        playerDisplay.toggle();
+    };
 
     const end = () => {
-        game.start = false;
+        game.run = false;
+        controlsDisplay.showRestart();
     };
 
     const checkTie = () => {
@@ -246,7 +329,7 @@ const game = (() => {
         const boxIndex = box.dataset.index;
         let marker;
 
-        if (!game.start) {
+        if (!game.run) {
             return;
         }
         
@@ -254,15 +337,15 @@ const game = (() => {
             return;
         }
 
-        if (player1.turn) {
-            marker = player1.play();
-            player1.turn = false;
-            player2.turn = true;
+        if (game.player1.turn) {
+            marker = game.player1.marker;
+            game.player1.turn = false;
+            game.player2.turn = true;
         }
         else {
-            marker = player2.play();
-            player2.turn = false;
-            player1.turn = true;
+            marker = game.player2.marker;
+            game.player2.turn = false;
+            game.player1.turn = true;
         }
 
         gameBoard.values.splice(boxIndex, 1, marker);
@@ -280,11 +363,30 @@ const game = (() => {
         }
     };
 
-    return {player1, player2, start, play}
+    return {player1, player2, start, play, restart}
+})();
+
+const controlsDisplay = (() => {
+    const restartBtn = document.querySelector('#restart');
+    
+    const render = () => {
+        const resetBtn = document.querySelector('#reset');
+        resetBtn.addEventListener('click', homeDisplay.show);
+
+        restartBtn.addEventListener('click', game.restart);
+    };
+    
+    const showRestart = () => {
+        restartBtn.style.display = 'block';
+    };
+
+    const hideRestart = () => {
+        restartBtn.style.display = 'none';
+    };
+
+    return {showRestart, hideRestart, render}
 })();
 
 homeDisplay.render();
 gameBoard.render();
-game.start = true;
-game.player1.turn = true;
-playerDisplay.toggle();
+controlsDisplay.render();

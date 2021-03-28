@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
+    
+<head>
         <link rel="stylesheet" href="style.css">
         <link href="https://fonts.googleapis.com/css2?family=Flamenco&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+        <link rel="icon" href="tic-tac-toe.png">
+        <title>Tic Tac Toe</title>
     </head>
+
     <body>
         <div id="game-wrapper">
             <div id="game-header">
-                <div class="player"><p class="player-name">Player 1</p><p class="marker">X</p></div>
-                <p id="versus">VS.</p>
-                <div class="player"><p class="player-name">Player 2</p><p class="marker">O</p></div>
+                <div class="player"><span class="player-name">Player 1</span><span class="marker">X</span></div>
+                <span id="versus">VS.</span>
+                <div class="player"><span class="player-name">Player 2</span><span class="marker">O</span></div>
             </div>
             <div id="game-board">
                 <div id="board-container"></div>
@@ -19,19 +23,31 @@
                 <img src="horizontal.svg" id="horizontal">
                 <img src="vertical.svg" id="vertical">
             </div>
+            <div id="game-footer">
+                <button type="button" id="restart">PLAY AGAIN</button>
+                <button type="button" id="reset">EDIT PLAYER SETTINGS</button>
+            </div>
         </div>
 
         <div id="overlay">
-            <h1>Tic Tac Toe</h1>
+            <div id="game-name">
+                <img src="tic-tac-toe.png" alt="9 by 9 grid with circles and exes" height="40">
+                <h1>Tic Tac Toe</h1>
+            </div>
+            
             <div id="rules">
                 <h2>Rules</h2>
                 <p>Align three identical symbols to win.</p>
             </div>
-            <h2>Player selection</h2>
+            <h2>Player settings</h2>
             <form id="player-selection">
                 <div id="players">
-                    <input type="text" id="player1-name" value="Player 1" maxlength="20" data-index="1">
-                    <input type="text" id="player2-name" value="Player 2" maxlength="20" data-index="2">
+                    <input type="text" id="player1-name" value="Player 1" 
+                            maxlength="20" data-index="1" data-checked="true"
+                    >
+                    <input type="text" id="player2-name" value="Player 2" 
+                            maxlength="20" data-index="2" data-checked="false"
+                    >
                 </div>
                 <div id="symbols">
                     <label>
@@ -43,11 +59,12 @@
                         <span>O</span>
                     </label>
                 </div>
-                <button type="button" id="start">Play</button>
+                <button type="submit" id="start">PLAY</button>
             </form>
         </div>
 
         <script src="script.js"></script>
 
     </body>
+
 </html>
